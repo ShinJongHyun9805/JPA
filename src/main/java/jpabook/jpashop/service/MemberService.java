@@ -42,4 +42,13 @@ public class MemberService {
         return memberRepository.findOne(memberId);
     }
 
+    @Transactional
+    public void update(long id, String name) {
+
+        // DB 조회 = 영속상태
+        Member member = memberRepository.findOne(id);
+        member.setName(name); // -> 커밋하면서 더티 체킹으로 UPDATE 쿼리
+
+    }
+
 }
