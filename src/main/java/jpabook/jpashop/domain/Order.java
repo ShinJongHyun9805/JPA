@@ -24,6 +24,11 @@ public class Order {
     @Column(name = "order_id")
     private Long id;
 
+    
+    /**
+     * 양방향 연관관계에서 주인은 @ManyToOne
+     * 반대인 @OneToMany는 mappedBy로 설정
+     * */
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -32,8 +37,12 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 
+
+    /**
+     * @OneToOne 양방향 연관관계에서 주인은 외래키를 가지고 있는 쪽이 주인임.
+     * */
     @JsonIgnore // 엔티티를 직접 return 할 때 양방향 연관관계가 걸린 곳 중 한 곳은 무조건 해당 어노테이션을 처리 해야 함.
-    @OneToOne(fetch = LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = LAZY, cascade = CascadeType.ALL) // cascade : 부모 엔티티의 상태변경이 일어 날 때 자식 엔티티에도 전파될 수 있도록 설정
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
 
