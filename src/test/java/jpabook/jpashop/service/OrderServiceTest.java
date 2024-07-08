@@ -1,11 +1,11 @@
 package jpabook.jpashop.service;
 
-import jpabook.jpashop.domain.Address;
-import jpabook.jpashop.domain.Member;
-import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.domain.OrderStatus;
-import jpabook.jpashop.domain.item.Book;
-import jpabook.jpashop.domain.item.Item;
+import jpabook.jpashop.domain.entity.Address;
+import jpabook.jpashop.domain.entity.Member;
+import jpabook.jpashop.domain.entity.Order;
+import jpabook.jpashop.domain.entity.OrderStatus;
+import jpabook.jpashop.domain.entity.item.Book;
+import jpabook.jpashop.domain.entity.item.Item;
 import jpabook.jpashop.exception.NotEnoughStockException;
 import jpabook.jpashop.repository.OrderRepository;
 import org.junit.Test;
@@ -17,7 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

@@ -1,6 +1,7 @@
 package jpabook.jpashop.repository;
 
-import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.domain.dto.OrderSimpleQueryDto;
+import jpabook.jpashop.domain.entity.Order;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -96,6 +97,10 @@ public class OrderRepository {
         return query.getResultList();
     }
 
+    /**
+     * fetch join
+     * Lazy Loading + 처음부터 연관된 엔티티를 모두 가져옴. (proxy X)
+     * */
     public List<Order> findAllWithMemberDelivery() {
         return em.createQuery(
                 "SELECT o FROM Order o" +
@@ -103,5 +108,16 @@ public class OrderRepository {
                         " join fetch o.delivery d", Order.class
         ).getResultList();
     }
+
+    public List<OrderSimpleQueryDto> findOrderDtos() {
+        return em.createQuery(
+                "SELECT new jpabook.jpashop.domain.dto.OrderSimpleQueryDto(o.id, m.name, o.orderDate, o.status, d.address) " +
+                        " FROM Order o" +
+                        " JOIN o.member m" +
+                        " JOIN o.delivery d", OrderSimpleQueryDto.class
+        ).getResultList();
+    }
+
+
 }
 

@@ -1,7 +1,7 @@
-package jpabook.jpashop.domain;
+package jpabook.jpashop.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jpabook.jpashop.domain.item.Item;
+import jpabook.jpashop.domain.entity.item.Item;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
