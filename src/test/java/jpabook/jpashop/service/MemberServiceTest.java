@@ -1,6 +1,6 @@
 package jpabook.jpashop.service;
 
-import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.domain.entity.Member;
 import jpabook.jpashop.repository.MemberRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
