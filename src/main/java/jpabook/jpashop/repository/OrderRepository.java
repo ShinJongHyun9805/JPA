@@ -98,6 +98,7 @@ public class OrderRepository {
     }
 
     /**
+     * xToOne
      * fetch join
      * Lazy Loading + 처음부터 연관된 엔티티를 모두 가져옴. (proxy X)
      * */
@@ -117,6 +118,26 @@ public class OrderRepository {
                         " JOIN o.delivery d", OrderSimpleQueryDto.class
         ).getResultList();
     }
+
+    /**
+     * orderItems와 같은 1 : N 관계(컬렉션)에서 DISTINCT -> Order id가 동일하면 데이터 중복제거, DB DISTINCT와 다름.
+     * 1. 해당 기능은 페이징 처리 불가
+     * 2. 하나의 컬렉션에만 fetch join 사용.
+     * */
+    public List<Order> findAllWithItem() {
+        return em.createQuery(
+                "SELECT DISTINCT o FROM Order o" +
+                        " join fetch o.member m " +
+                        " join fetch o.delivery d " +
+                        " join fetch o.orderItems oi " +
+                        " join fetch oi.item i", Order.class)
+                .getResultList();
+    }
+
+    /**
+     * collection
+     * fetch join
+     * */
 
 
 }
