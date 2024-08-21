@@ -110,6 +110,16 @@ public class OrderRepository {
         ).getResultList();
     }
 
+    public List<Order> findAllWithMemberDelivery(int offset, int limit) {
+        return em.createQuery(
+                "SELECT o FROM Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
     public List<OrderSimpleQueryDto> findOrderDtos() {
         return em.createQuery(
                 "SELECT new jpabook.jpashop.domain.dto.OrderSimpleQueryDto(o.id, m.name, o.orderDate, o.status, d.address) " +
@@ -120,7 +130,7 @@ public class OrderRepository {
     }
 
     /**
-     * orderItems와 같은 1 : N 관계(컬렉션)에서 DISTINCT -> Order id가 동일하면 데이터 중복제거, DB DISTINCT와 다름.
+     * orderItems와 같은 1 : N 관계(컬렉션)에서 DISTINCT -> Order id가 동일하면 데이터 중복제거, DB DISTINCT와 다름. GROUP BY 역할
      * 1. 해당 기능은 페이징 처리 불가
      * 2. 하나의 컬렉션에만 fetch join 사용.
      * */
