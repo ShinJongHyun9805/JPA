@@ -1,13 +1,13 @@
 package jpabook.jpashop;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManager;
 import jpabook.jpashop.domain.entity.*;
 import jpabook.jpashop.domain.entity.item.Book;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
 
 /**
  * 종 주문 2개
