@@ -1,14 +1,14 @@
 package jpabook.jpashop.repository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import jpabook.jpashop.domain.dto.OrderSimpleQueryDto;
 import jpabook.jpashop.domain.entity.Order;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 

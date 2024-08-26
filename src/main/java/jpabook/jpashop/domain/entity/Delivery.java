@@ -1,18 +1,20 @@
 package jpabook.jpashop.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import static jakarta.persistence.FetchType.LAZY;
 
-import static javax.persistence.FetchType.*;
 
 @Entity
 @Getter @Setter
 public class Delivery {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "delivery_id")
     private Long id;
 
