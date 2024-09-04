@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"id,", "userName", "age"})
-public class JpaMember {
+public class JpaMember extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "member_id")

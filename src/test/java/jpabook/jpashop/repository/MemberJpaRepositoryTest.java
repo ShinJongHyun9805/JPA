@@ -186,4 +186,25 @@ class MemberJpaRepositoryTest {
 
         em.flush(); // -> 를 해도 동기화 X
     }
+
+    @Test
+    void JpaEventBaseEntity() throws InterruptedException {
+
+        JpaMember member = new JpaMember("member1");
+        memberJpaRepository.save(member);
+
+        Thread.sleep(1000);
+        member.setUserName("member2");
+
+        em.flush();
+        em.clear();
+
+        JpaMember findMember = memberJpaRepository.findById(member.getId()).get();
+
+        System.out.println("findMember.getCreatedDate() = " + findMember.getCreatedDate());
+        System.out.println("findMember.getLastModifiedDate() = " + findMember.getLastModifiedDate());
+        System.out.println("findMember.getCreatedBy() = " + findMember.getCreatedBy());
+        System.out.println("findMember.getLastModifiedBy = " + findMember.getLastModifiedBy());
+
+    }
 }
