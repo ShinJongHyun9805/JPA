@@ -1,11 +1,17 @@
 package jpabook.jpashop.api;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
+import jpabook.jpashop.domain.entity.JpaMember;
 import jpabook.jpashop.domain.entity.Member;
+import jpabook.jpashop.repository.MemberJpaRepository;
 import jpabook.jpashop.service.MemberService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +23,8 @@ import java.util.stream.Collectors;
 public class MemberApiController {
 
     private final MemberService memberService;
+
+    private final MemberJpaRepository memberJpaRepository;
 
     @GetMapping("/v1/members")
     public List<Member> getMemberListV1() {
@@ -64,6 +72,39 @@ public class MemberApiController {
 
         return new UpdateMemberResponse(findMember.getId(), findMember.getName());
 
+    }
+
+    /**
+     * Wls paging API
+     *
+     * http://localhost:8080/api/members?page=1&size=3&sort=id,desc
+     * @param pageable
+     * */
+    @GetMapping("/members")
+    public Page<JpaMember> list(Pageable pageable) {
+        return memberJpaRepository.findAll(pageable);
+    }
+
+    @GetMapping("/members/default-page")
+    public Page<JpaMember> defaultPage(@PageableDefault(size = 5) Pageable pageable) {
+        return memberJpaRepository.findAll(pageable);
+    }
+
+    /**
+     * return response Map
+     *
+     * */
+    @GetMapping("/members/return-map")
+    public Page<MemberDto> returnMap(Pageable pageable) {
+        return memberJpaRepository.findAll(pageable).map(jpaMember -> new MemberDto(jpaMember.getUserName()));
+    }
+
+
+    @PostConstruct
+    public void init() {
+        for (int i = 0; i < 100; i++) {
+            memberJpaRepository.save(new JpaMember("user" + i, i));
+        }
     }
 
     @Data
