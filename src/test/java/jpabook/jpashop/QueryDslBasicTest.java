@@ -6,15 +6,13 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jpabook.jpashop.domain.entity.QQueryDslMember;
 import jpabook.jpashop.domain.entity.QueryDslMember;
-import jpabook.jpashop.domain.entity.QueryDslTeam;
-import jpabook.jpashop.service.queryDslTest;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 
 @SpringBootTest
 @Transactional
