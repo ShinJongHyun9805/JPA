@@ -1,5 +1,6 @@
 package jpabook.jpashop;
 
+import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -7,6 +8,7 @@ import jpabook.jpashop.domain.entity.QQueryDslMember;
 import jpabook.jpashop.domain.entity.QueryDslMember;
 import jpabook.jpashop.domain.entity.QueryDslTeam;
 import jpabook.jpashop.service.queryDslTest;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
@@ -61,5 +63,36 @@ public class QueryDslBasicTest {
                 .fetchOne();
 
         System.out.println("queryGetMember = " + queryGetMember.getUserName());
+    }
+
+    @Test
+    void queryDslSearchTest() {
+        queryFactory = new JPAQueryFactory(em);
+        QQueryDslMember m = QQueryDslMember.queryDslMember;
+
+//        QueryDslMember findMember = queryFactory.selectFrom(m)
+//                .where(m.userName.eq("member1")
+//                        .and(m.age.eq(10)))
+//                .fetchOne();
+
+//        Assertions.assertEquals(findMember.getId(), 1);
+//        System.out.println("findMember = " + findMember);
+
+        QueryDslMember findMember = queryFactory.selectFrom(m)
+                .where(m.userName.endsWith("member1"))
+                .fetchOne();
+
+        System.out.println("findMember = " + findMember);
+    }
+
+    @Test
+    void resultTest() {
+
+        queryFactory = new JPAQueryFactory(em);
+        QQueryDslMember m = QQueryDslMember.queryDslMember;
+
+        QueryResults<QueryDslMember> results = queryFactory.selectFrom(m)
+                .fetchResults();
+
     }
 }
