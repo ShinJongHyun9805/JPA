@@ -1,8 +1,11 @@
 package jpabook.jpashop.service;
 
+import jpabook.jpashop.domain.entity.JpaMember;
 import jpabook.jpashop.domain.entity.Member;
+import jpabook.jpashop.repository.MemberJpaRepository;
 import jpabook.jpashop.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +17,9 @@ import java.util.List;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+
+    // mock test
+    private final MemberJpaRepository memberJpaRepository;
 
     /**
      * 회원 가입
@@ -49,6 +55,10 @@ public class MemberService {
         Member member = memberRepository.findOne(id);
         member.setName(name); // -> 커밋하면서 더티 체킹으로 UPDATE 쿼리
 
+    }
+
+    public JpaMember findMemberByUserName(String userName) {
+        return memberJpaRepository.findByUserName(userName);
     }
 
 }

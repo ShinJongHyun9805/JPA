@@ -13,11 +13,13 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface  MemberJpaRepository extends JpaRepository<JpaMember, Long> {
+public interface MemberJpaRepository extends JpaRepository<JpaMember, Long> {
 
     List<JpaMember> findByUserNameAndAgeGreaterThan(String userName, int age);
 
     List<JpaMember> findTop3HelloBy();
+
+    JpaMember findByUserName(String userName);
 
     @Query("select m from JpaMember m where m.userName = :userName and m.age = :age")
     List<JpaMember> findUser(@Param("userName") String userName, @Param("age") int age);
