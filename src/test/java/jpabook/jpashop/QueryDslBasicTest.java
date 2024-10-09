@@ -1,16 +1,22 @@
 package jpabook.jpashop;
 
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jpabook.jpashop.domain.entity.QQueryDslMember;
+import jpabook.jpashop.domain.entity.QQueryDslTeam;
 import jpabook.jpashop.domain.entity.QueryDslMember;
+import jpabook.jpashop.domain.entity.QueryDslTeam;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -92,5 +98,44 @@ public class QueryDslBasicTest {
         QueryResults<QueryDslMember> results = queryFactory.selectFrom(m)
                 .fetchResults();
 
+    }
+
+
+    @Test
+//    @Commit
+    void group() {
+
+//        QueryDslTeam teamA = new QueryDslTeam("teamA");
+//        QueryDslTeam teamB = new QueryDslTeam("teamB");
+//
+//        List<QueryDslTeam> teamList = Arrays.asList(teamA, teamB);
+//        teamList.forEach(em::persist);
+//
+//        QueryDslMember member1 = new QueryDslMember("qwer", 10, teamA);
+//        QueryDslMember member2 = new QueryDslMember("asdf", 30, teamB);
+//        QueryDslMember member3 = new QueryDslMember("zxcv", 40, teamA);
+//        QueryDslMember member4 = new QueryDslMember("tyui", 35, teamB);
+//        QueryDslMember member5 = new QueryDslMember("fdsg", 20, teamA);
+//        QueryDslMember member6 = new QueryDslMember("vbnh", 60, teamB);
+//
+//        List<QueryDslMember> memberList = Arrays.asList(member1, member2, member3, member4, member5, member6);
+//        memberList.forEach(em::persist);
+
+        queryFactory = new JPAQueryFactory(em);
+        QQueryDslMember m = QQueryDslMember.queryDslMember;
+        QQueryDslTeam t = QQueryDslTeam.queryDslTeam;
+
+        List<Tuple> result = queryFactory
+                .select(t.name, m.age.avg())
+                .from(m)
+                .join(m.queryDslTeam, t)
+                .groupBy(t.name)
+                .fetch();
+
+        Tuple teamA = result.get(0);
+        Tuple teamB = result.get(1);
+
+        Assertions.assertEquals(teamA.get(t.name), "teamA");
+        Assertions.assertEquals(teamB.get(t.name), "teamB");
     }
 }
