@@ -133,8 +133,9 @@ public class QueryDslBasicTest {
                 .fetch();
 
         Tuple teamA = result.get(0);
-        Tuple TeamB = result.get(1);
+        Tuple teamB = result.get(1);
 
         Assertions.assertEquals(teamA.get(t.name), "teamA");
+        Assertions.assertEquals(teamB.get(t.name), "teamB");
     }
 }
