@@ -101,5 +101,11 @@ class NoticeJpaRepositoryTest {
                 .fetchResults();
 
         Assertions.assertEquals(queryResults.getTotal(), 152);
+
+        Long count = jpaQueryFactory.select(notice.count())
+                .from(notice)
+                .fetchOne();
+        System.out.println("count = " + count);
+
     }
 }
