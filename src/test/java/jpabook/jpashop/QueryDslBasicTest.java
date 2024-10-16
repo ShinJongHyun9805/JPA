@@ -2,9 +2,12 @@ package jpabook.jpashop;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jpabook.jpashop.domain.dto.MemberDto;
+import jpabook.jpashop.domain.dto.QMemberDto;
 import jpabook.jpashop.domain.entity.QQueryDslMember;
 import jpabook.jpashop.domain.entity.QQueryDslTeam;
 import jpabook.jpashop.domain.entity.QueryDslMember;
@@ -137,5 +140,19 @@ public class QueryDslBasicTest {
 
         Assertions.assertEquals(teamA.get(t.name), "teamA");
         Assertions.assertEquals(teamB.get(t.name), "teamB");
+    }
+
+    @Test
+    void DTO조회_테스트() {
+
+        queryFactory = new JPAQueryFactory(em);
+        QQueryDslMember m = QQueryDslMember.queryDslMember;
+
+        List<MemberDto> result = queryFactory
+                .select(new QMemberDto(m.userName, m.age))
+                .from(m)
+                .fetch();
+
+        result.forEach(System.out::println);
     }
 }
