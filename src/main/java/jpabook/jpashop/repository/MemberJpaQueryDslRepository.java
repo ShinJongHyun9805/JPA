@@ -117,6 +117,7 @@ public class MemberJpaQueryDslRepository {
                         teamNameEq(condition.getTeamName(), t),
                         ageGoe(condition.getAgeLoe(), m),
                         ageLoe(condition.getAgeLoe(), m))
+                .orderBy(m.id.desc())
                 .fetch();
     }
 
