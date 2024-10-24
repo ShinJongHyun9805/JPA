@@ -9,7 +9,9 @@ import jpabook.jpashop.domain.dto.QMemberTeamDto;
 import jpabook.jpashop.domain.entity.QQueryDslMember;
 import jpabook.jpashop.domain.entity.QQueryDslTeam;
 import jpabook.jpashop.domain.entity.QueryDslMember;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 import static org.springframework.util.StringUtils.isEmpty;
@@ -51,6 +53,52 @@ public class MemberJpaQueryDslRepository2Impl implements memberJpaQueryDslCustom
                 .fetch();
 
         return findMember;
+    }
+
+    @Override
+    public Page<MemberTeamDto> searchPageSimple(MemberSearchCondition cond, Pageable pageable) {
+        QQueryDslMember member = QQueryDslMember.queryDslMember;
+        QQueryDslTeam team = QQueryDslTeam.queryDslTeam;
+
+        // count
+        Long count = queryFactory
+                .select(member.id.count())
+                .from(member)
+                .leftJoin(member.queryDslTeam, team)
+                .where(userNameEq(cond.getUserName(), member),
+                        teamNameEq(cond.getTeamName(), team),
+                        ageGoe(cond.getAgeLoe(), member),
+                        ageLoe(cond.getAgeLoe(), member))
+                .fetchOne();
+
+        // 본 데이터
+        List<MemberTeamDto> findMember = queryFactory
+                .select(new QMemberTeamDto(
+                                member.id.as("memberId")
+                                , member.userName.as("userName")
+                                , member.age.as("age")
+                                , team.id.as("teamId")
+                                , team.name.as("teamName")
+                        )
+                )
+                .from(member)
+                .leftJoin(member.queryDslTeam, team)
+                .where(
+                        userNameEq(cond.getUserName(), member),
+                        teamNameEq(cond.getTeamName(), team),
+                        ageGoe(cond.getAgeLoe(), member),
+                        ageLoe(cond.getAgeLoe(), member))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(member.id.desc())
+                .fetch();
+
+        return new PageImpl<>(findMember, pageable, count);
+    }
+
+    @Override
+    public Page<MemberTeamDto> searchPageComplex(MemberSearchCondition cond, Pageable pageable) {
+        return null;
     }
 
     private BooleanExpression userNameEq(String userName, QQueryDslMember m) {

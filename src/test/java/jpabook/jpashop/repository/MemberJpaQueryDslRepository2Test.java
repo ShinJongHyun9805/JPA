@@ -9,6 +9,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
@@ -67,6 +69,33 @@ class MemberJpaQueryDslRepository2Test {
         List<MemberTeamDto> result = memberJpaQueryDslRepository.search(cond);
 
         assertThat(result).extracting("userName").containsExactly("qwer4");
+    }
+
+    @Test
+    void searchPageSimpleTest() {
+
+        QueryDslTeam teamA = new QueryDslTeam("teamA");
+        QueryDslTeam teamB = new QueryDslTeam("teamB");
+        em.persist(teamA);
+        em.persist(teamB);
+
+        QueryDslMember member1 = new QueryDslMember("qwer1", 10, teamA);
+        QueryDslMember member2 = new QueryDslMember("qwer2", 20, teamA);
+
+        QueryDslMember member3 = new QueryDslMember("qwer3", 30, teamB);
+        QueryDslMember member4 = new QueryDslMember("qwer4", 40, teamB);
+        em.persist(member1);
+        em.persist(member2);
+        em.persist(member3);
+        em.persist(member4);
+
+        MemberSearchCondition cond = new MemberSearchCondition();
+        PageRequest pageRequest = PageRequest.of(0, 3);
+
+        Page<MemberTeamDto> result = memberJpaQueryDslRepository.searchPageSimple(cond, pageRequest);
+
+        assertThat(result.getSize()).isEqualTo(3);
+        assertThat(result.getContent()).extracting("userName").containsExactly("qwer3");
     }
 
 }
