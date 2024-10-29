@@ -90,11 +90,11 @@ class MemberJpaQueryDslRepository2Test {
         em.persist(member4);
 
         MemberSearchCondition cond = new MemberSearchCondition();
-        PageRequest pageRequest = PageRequest.of(0, 3);
+        PageRequest pageRequest = PageRequest.of(0, 10);
 
         Page<MemberTeamDto> result = memberJpaQueryDslRepository.searchPageSimple(cond, pageRequest);
 
-        assertThat(result.getSize()).isEqualTo(3);
+        assertThat(result.getSize()).isEqualTo(10);
         assertThat(result.getContent()).extracting("userName").containsExactly("qwer3");
     }
 
