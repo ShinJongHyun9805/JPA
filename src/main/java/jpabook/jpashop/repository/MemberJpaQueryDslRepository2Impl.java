@@ -1,6 +1,7 @@
 package jpabook.jpashop.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jpabook.jpashop.domain.dto.MemberSearchCondition;
@@ -12,6 +13,8 @@ import jpabook.jpashop.domain.entity.QueryDslMember;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
+
 import java.util.List;
 
 import static org.springframework.util.StringUtils.isEmpty;
@@ -61,15 +64,15 @@ public class MemberJpaQueryDslRepository2Impl implements memberJpaQueryDslCustom
         QQueryDslTeam team = QQueryDslTeam.queryDslTeam;
 
         // count
-        Long count = queryFactory
+        JPAQuery<Long> countQuery = queryFactory
                 .select(member.id.count())
                 .from(member)
                 .leftJoin(member.queryDslTeam, team)
                 .where(userNameEq(cond.getUserName(), member),
                         teamNameEq(cond.getTeamName(), team),
                         ageGoe(cond.getAgeLoe(), member),
-                        ageLoe(cond.getAgeLoe(), member))
-                .fetchOne();
+                        ageLoe(cond.getAgeLoe(), member));
+
 
         // 본 데이터
         List<MemberTeamDto> findMember = queryFactory
@@ -93,7 +96,7 @@ public class MemberJpaQueryDslRepository2Impl implements memberJpaQueryDslCustom
                 .orderBy(member.id.desc())
                 .fetch();
 
-        return new PageImpl<>(findMember, pageable, count);
+        return PageableExecutionUtils.getPage(findMember, pageable, () -> countQuery.fetchCount());
     }
 
     @Override
